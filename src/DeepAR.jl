@@ -4,6 +4,7 @@ using Flux
 using StatsBase
 using Random
 using ProgressMeter
+using Distributions
 
 """
 DeepAR: Probabilistic Forecasting with Autoregressive Recurrent Networks
@@ -38,6 +39,15 @@ Train a DeepAR model using the given data loaders and hyperparameters.
 Returns a vector of loss values during training.
 """
 function train_DeepAR(model, loaderXtrain, loaderYtrain, hparams::DeepARParams)
+    # Assert that DataLoaders are not empty
+    # Check if the DataLoaders have data
+    if size(loaderXtrain.data, 1) == 0
+        throw(ArgumentError("loaderXtrain is empty and has no data to iterate over"))
+    end
+    if size(loaderYtrain.data, 1) == 0
+        throw(ArgumentError("loaderYtrain is empty and has no data to iterate over"))
+    end
+
     losses = []
     optim = Flux.setup(Flux.Adam(hparams.η), model)
     @showprogress for (batch_Xₜ, batch_Xₜ₊₁) in zip(loaderXtrain, loaderYtrain)
@@ -88,3 +98,7 @@ function forescasting_DeepAR(model, ts, t₀, τ; n_samples=100)
     end
     return prediction
 end
+
+export forescasting_DeepAR, train_DeepAR, DeepARParams
+
+end # module
