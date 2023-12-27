@@ -91,7 +91,7 @@ function forescasting_DeepAR(model, ts, t₀, τ; n_samples=100)
         μ, logσ = model([x])
     end
 
-    for x in ts[(t₀ + 1):(t₀ + τ)]
+    for x in ts[(t₀+1):(t₀+τ)]
         ŷ = mean(Float32.(rand(Normal(μ, softplus(logσ)), n_samples)))
         μ, logσ = model([ŷ])
         append!(prediction, ŷ)
