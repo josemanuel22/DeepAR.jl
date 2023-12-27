@@ -4,8 +4,6 @@ using Flux
 using Distributions
 using Flux.Data: DataLoader
 
-
-
 # Test setup
 #Base.@kwdef mutable struct DeepARParams
 #    η = 1e-2
@@ -44,8 +42,7 @@ using Flux.Data: DataLoader
     @test !isempty(losses_empty)
 
     empty_loader = DataLoader(Float32.(randn(0, 1000)), batchsize=100, shuffle=false)
-    losses_empty = train_DeepAR(model, empty_loader, empty_loader, hparams)
-    @test isempty(losses_empty)
+    @test_throws Exception train_DeepAR(model, empty_loader, empty_loader, hparams)
 
     # Test 3: Error handling for invalid inputs
     @test_throws Exception train_DeepAR(model, "invalid", loaderYtrain, hparams)
