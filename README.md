@@ -47,11 +47,6 @@ Generate forecasts using the `forecasting_DeepAR` function:
   - `n_samples`: Number of samples per forecast (default: 100).
 - Returns a vector of forecasted values.
 
-## Examples
-```julia
-# Example usage will be added here
-```
-
 ## Contributing
 Contributions to the DeepAR module are welcome. Please submit issues and pull requests on the repository.
 
