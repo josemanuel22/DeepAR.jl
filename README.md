@@ -3,7 +3,7 @@
 [![Build Status](https://github.com/josemanuel22/DeepAR.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/josemanuel22/DeepAR.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
 
-DeepAR is a Julia module designed for probabilistic forecasting using autoregressive recurrent networks, based on the concept introduced in the paper "DeepAR: Probabilistic Forecasting with Autoregressive Recurrent Networks" (https://arxiv.org/pdf/1704.04110.pdf).
+DeepAR is a Julia module designed for probabilistic forecasting using autoregressive recurrent networks, based on the concept introduced in the paper [DeepAR: Probabilistic Forecasting with Autoregressive Recurrent Networks](https://arxiv.org/pdf/1704.04110.pdf).
 
 ## Installation
 Currently, DeepAR is not registered in Julia's General registry. To install, clone the repository directly.
