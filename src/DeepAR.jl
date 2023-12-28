@@ -17,7 +17,6 @@ DeepArParams
 Hyperparameters for the DeepAR model.
 
 - `η::Float64`: The learning rate for model training. Default is `1e-2`.
-- `epochs::Int`: The number of training epochs. Default is `10`.
 - `n_mean::Int`: The number of samples used for computing the predictive mean. Default is `100`.
 """
 Base.@kwdef mutable struct DeepARParams
@@ -50,22 +49,24 @@ function train_DeepAR(model, loaderXtrain, loaderYtrain, hparams::DeepARParams)
 
     losses = []
     optim = Flux.setup(Flux.Adam(hparams.η), model)
-    @showprogress for (batch_Xₜ, batch_Xₜ₊₁) in zip(loaderXtrain, loaderYtrain)
-        loss, grads = Flux.withgradient(model) do m
-            likelihood = 0
-            Flux.reset!(m)
-            model([batch_Xₜ[1]])
-            for (x, y) in zip(batch_Xₜ[2:end], batch_Xₜ₊₁[2:end])
-                μ, logσ = model([x])
-                σ = softplus(logσ)
-                ŷ = mean(μ .+ σ .* Float32.(rand(Normal(μ, σ), hparams.n_mean)))
-                likelihood =
-                    -(log(sqrt(2 * π)) + log(σ) + ((y - ŷ)^2 / (2 * σ^2))) + likelihood
+    @showprogress for epoch in 1:hparams.epochs
+        for (batch_Xₜ, batch_Xₜ₊₁) in zip(loaderXtrain, loaderYtrain)
+            loss, grads = Flux.withgradient(model) do m
+                likelihood = 0
+                Flux.reset!(m)
+                model([batch_Xₜ[1]])
+                for (x, y) in zip(batch_Xₜ[2:end], batch_Xₜ₊₁[2:end])
+                    μ, logσ = model([x])
+                    σ = softplus(logσ)
+                    ŷ = mean(μ .+ σ .* Float32.(rand(Normal(μ, σ), hparams.n_mean)))
+                    likelihood =
+                        -(log(sqrt(2 * π)) + log(σ) + ((y - ŷ)^2 / (2 * σ^2))) + likelihood
+                end
+                likelihood / length(batch_Xₜ)
             end
-            likelihood / length(batch_Xₜ)
+            Flux.update!(optim, model, grads[1])
+            push!(losses, loss)
         end
-        Flux.update!(optim, model, grads[1])
-        push!(losses, loss)
     end
     return losses
 end
