@@ -33,7 +33,7 @@ using Flux.Data: DataLoader
     loaderYtrain = DataLoader(Ytrain, batchsize=100, shuffle=false)
 
     losses = train_DeepAR(model, loaderXtrain, loaderYtrain, hparams)
-    @test length(losses) == hparams.epochs
+    @test length(losses) == hparams.epochs * floor(Int, length(Xtrain) / 100)
     @test all(x -> x <= 0, losses)  # Assuming loss should be negative or zero
 
     # Test 2: Handling of empty loaders
@@ -56,5 +56,5 @@ using Flux.Data: DataLoader
     loaderYtrain = DataLoader(Ytrain, batchsize=200, shuffle=false)
     custom_hparams = DeepARParams(η=1e-3, epochs=5, n_mean=50)
     losses_custom = train_DeepAR(model, loaderXtrain, loaderYtrain, custom_hparams)
-    @test length(losses_custom) == custom_hparams.epochs
+    @test length(losses_custom) == custom_hparams.epochs * floor(Int, length(Xtrain) / 200)
 end
