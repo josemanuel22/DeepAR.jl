@@ -25,7 +25,6 @@ using DeepAR
 ### Hyperparameters
 Define the hyperparameters for the DeepAR model using `DeepARParams`:
 - `η::Float64`: Learning rate for model training. Default is `1e-2`.
-- `epochs::Int`: Number of training epochs. Default is `10`.
 - `n_mean::Int`: Number of samples used for computing the predictive mean. Default is `100`.
 
 ### Training
@@ -46,6 +45,25 @@ Generate forecasts using the `forecasting_DeepAR` function:
   - `τ`: Number of time steps to forecast.
   - `n_samples`: Number of samples per forecast (default: 100).
 - Returns a vector of forecasted values.
+
+## Example
+
+```Julia
+  using DeepAR
+
+  model = Chain(
+      RNN(1 => 10, relu), RNN(10 => 10, relu), Dense(10 => 16, relu), Dense(16 => 2, identity)
+  )
+
+  train_data = Float32.(randn(1, 1001))
+  deepAR_params = DeepARParams(; η=0.01, epochs=100, n_mean=100)
+
+  loaderXtrain = DataLoader(train_data[1:end-1], batchsize=1000)
+  loaderYtrain = DataLoader(train_data[2:end], batchsize=1000)
+
+  # Train the model
+  loss = train_DeepAR(model, loaderXtrain, loaderYtrain, deepAR_params)
+```
 
 ## Contributing
 Contributions to the DeepAR module are welcome. Please submit issues and pull requests on the repository.
