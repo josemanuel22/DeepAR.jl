@@ -69,7 +69,7 @@ Generate forecasts using the `forecasting_DeepAR` function:
 Contributions to the DeepAR module are welcome. Please submit issues and pull requests on the repository.
 
 ## License
-DeepAR is licensed under MIT. Please check the repository for more details.
+DeepAR is licensed under [MIT License](LICENSE). Please check the repository for more details.
 
 ---
 
